@@ -8,12 +8,12 @@ namespace SozlukUI.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index()//Ana sayfa ve listeleme yapılırken kullanılıyor.
         {
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult About()//Hakkında sayfası
         {
             ViewBag.Message = "Your application description page.";
 
@@ -26,5 +26,11 @@ namespace SozlukUI.Controllers
 
             return View();
         }
+        
+        public ActionResult Test()
+        {
+            return View();
+        }
+        
     }
 }
