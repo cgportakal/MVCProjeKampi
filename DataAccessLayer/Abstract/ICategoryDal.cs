@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Abstract
 {
-    public interface ICategoryDal
+    public interface ICategoryDal : IRepository<Category>
     {
         //CRUD operasyonları burada tanımlanacak...
         List<Category> List();
