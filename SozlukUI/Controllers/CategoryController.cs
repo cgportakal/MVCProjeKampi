@@ -1,5 +1,8 @@
 ﻿using BusinessLayer.Concrete;
+using BusinessLayer.ValidationRules;
+using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,7 @@ namespace SozlukUI.Controllers
 {
     public class CategoryController : Controller
     {
-        CategoryManager cm = new CategoryManager();
+        CategoryManager cm = new CategoryManager(new EfCategoryDal());
         // GET: Category
         public ActionResult Index()
         {
@@ -19,13 +22,35 @@ namespace SozlukUI.Controllers
 
         public ActionResult GetCategoryList()
         {
-            var categoryValues = cm.GetAllBl();
+            var categoryValues = cm.GetList();
             return View(categoryValues);//Bana View döndürürken de categoryValues içeriğini de getir.
         }
+
+        [HttpGet]
+        public ActionResult AddCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public ActionResult AddCategory(Category p)
         {
-            cm.CategoryAddBl(p);
-            return RedirectToAction("GetCategoryList");
+            //cm.CategoryAddBl(p);
+            CategoryValidator categoryValidator = new CategoryValidator();
+            ValidationResult results = categoryValidator.Validate(p);
+            if (results.IsValid)
+            {
+                cm.CategoryAdd(p);
+                return RedirectToAction("GetCategoryList");
+            }
+            else
+            {
+                foreach (var item in results.Errors)
+                {
+                    ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
+                }
+            }
+            return View();
         }
     }
 }

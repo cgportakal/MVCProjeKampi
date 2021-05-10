@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Concrete.Repositories;
+﻿using BusinessLayer.Abstract;
+using DataAccessLayer.Abstract;
+using DataAccessLayer.Concrete.Repositories;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -8,25 +10,39 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    public class CategoryManager
+    public class CategoryManager : ICategoryService
     {
-        GenericRepository<Category> repo = new GenericRepository<Category>();
+        ICategoryDal _categoryDal;
 
-        public List<Category> GetAllBl()
+        public CategoryManager(ICategoryDal categoryDal)
         {
-            return repo.List();
+            _categoryDal = categoryDal;
         }
-        public void CategoryAddBl(Category p)
+
+        public void CategoryAdd(Category category)
         {
-            if (p.CategoryName == "" || p.CategoryName.Length <= 3 ||
-                p.CategoryDescription == "" || p.CategoryName.Length>=51)
-            {
-                //Hata mesajı buraya
-            }
-            else
-            {
-                repo.Insert(p);
-            }
+            //Fluent Validation'un Aspect'i var. Buna daha sonra gireceğiz.
+            _categoryDal.Insert(category);
         }
+
+        public List<Category> GetList()
+        {
+            return _categoryDal.List();
+        }
+
+
+
+
+        //public void CategoryAddBl(Category p)
+        //{
+        //    if (p.CategoryName == "" || p.CategoryStatus == false || p.CategoryName.Length <= 2)
+        //    {
+        //        //hata mesajı
+        //    }
+        //    else
+        //    {
+        //        _categoryDal.Insert(p);
+        //    }
+        //}
     }
 }
